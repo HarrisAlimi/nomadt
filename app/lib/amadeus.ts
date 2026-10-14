@@ -37,40 +37,50 @@ interface AmadeusFlightResponse {
 
 // Airport code to city name mapping
 const AIRPORT_NAMES: Record<string, string> = {
-  MCO: 'Orlando (MCO)',
-  MLB: 'Melbourne (MLB)',
-  CLT: 'Charlotte (CLT)',
+  JFK: 'New York (JFK)',
+  LAX: 'Los Angeles (LAX)',
+  BOS: 'Boston (BOS)',
+  SFO: 'San Francisco (SFO)',
+  ORD: 'Chicago (ORD)',
+  ATL: 'Atlanta (ATL)',
+  DEN: 'Denver (DEN)',
+  SEA: 'Seattle (SEA)',
+  MIA: 'Miami (MIA)',
+  LIS: 'Lisbon (LIS)',
+  HND: 'Tokyo (HND)',
+  KEF: 'Reykjavík (KEF)',
+  MEX: 'Mexico City (MEX)',
   FCO: 'Rome (FCO)',
-  MXP: 'Milan (MXP)',
-  VCE: 'Venice (VCE)',
-  FLR: 'Florence (FLR)',
-  NAP: 'Naples (NAP)',
+  CDG: 'Paris (CDG)',
+  LHR: 'London (LHR)',
+  BCN: 'Barcelona (BCN)',
+  BOG: 'Bogotá (BOG)',
 }
 
 // Routes to search for deals
 const SEARCH_ROUTES = [
-  { origin: 'MCO', destination: 'FCO' },
-  { origin: 'MCO', destination: 'MXP' },
-  { origin: 'MCO', destination: 'VCE' },
-  { origin: 'MCO', destination: 'FLR' },
-  { origin: 'CLT', destination: 'FCO' },
-  { origin: 'CLT', destination: 'MXP' },
-  { origin: 'CLT', destination: 'VCE' },
-  { origin: 'MLB', destination: 'FCO' },
-  { origin: 'MLB', destination: 'MXP' },
+  { origin: 'JFK', destination: 'LIS' },
+  { origin: 'LAX', destination: 'HND' },
+  { origin: 'BOS', destination: 'KEF' },
+  { origin: 'SFO', destination: 'MEX' },
+  { origin: 'ORD', destination: 'FCO' },
+  { origin: 'ATL', destination: 'CDG' },
+  { origin: 'DEN', destination: 'LHR' },
+  { origin: 'SEA', destination: 'BCN' },
+  { origin: 'MIA', destination: 'BOG' },
 ]
 
-// Average baseline prices for savings calculation (round-trip)
+// Typical round-trip prices, used to calculate savings
 const BASELINE_PRICES: Record<string, number> = {
-  'MCO-FCO': 680,
-  'MCO-MXP': 720,
-  'MCO-VCE': 750,
-  'MCO-FLR': 790,
-  'CLT-FCO': 710,
-  'CLT-MXP': 740,
-  'CLT-VCE': 770,
-  'MLB-FCO': 780,
-  'MLB-MXP': 820,
+  'JFK-LIS': 640,
+  'LAX-HND': 980,
+  'BOS-KEF': 520,
+  'SFO-MEX': 410,
+  'ORD-FCO': 760,
+  'ATL-CDG': 810,
+  'DEN-LHR': 790,
+  'SEA-BCN': 850,
+  'MIA-BOG': 380,
 }
 
 let cachedToken: { token: string; expiresAt: number } | null = null
@@ -190,10 +200,8 @@ export async function pullFlightDeals(
       const carrierCode = bestOffer.validatingAirlineCodes?.[0] || ''
       const airlineName = data.dictionaries?.carriers?.[carrierCode] || carrierCode
 
-      // Feature deals from Orlando/Charlotte to Rome (the site's primary routes)
-      const isFeatured =
-        (route.origin === 'MCO' || route.origin === 'CLT') &&
-        route.destination === 'FCO'
+      // Feature the biggest discounts (35%+ off the typical fare)
+      const isFeatured = savings / originalPrice >= 0.35
 
       deals.push({
         from_location: AIRPORT_NAMES[route.origin] || route.origin,

@@ -26,17 +26,17 @@ function generateFreshDeals(departureDate: string, returnDate: string): PulledFl
     ? `${depMonth} ${dep.getDate()}-${ret.getDate()}`
     : `${depMonth} ${dep.getDate()} - ${retMonth} ${ret.getDate()}`
 
-  // Realistic price ranges for East Coast US → Italy (round-trip)
+  // Realistic round-trip price ranges for popular US -> international routes
   const routes = [
-    { from: 'Orlando (MCO)', to: 'Rome (FCO)', baseMin: 380, baseMax: 520, baseline: 680, airlines: ['Icelandair', 'TAP Air Portugal', 'American Airlines', 'Delta'], featured: true },
-    { from: 'Charlotte (CLT)', to: 'Rome (FCO)', baseMin: 395, baseMax: 540, baseline: 710, airlines: ['American Airlines', 'United', 'Lufthansa'], featured: true },
-    { from: 'Melbourne (MLB)', to: 'Rome (FCO)', baseMin: 440, baseMax: 580, baseline: 780, airlines: ['Delta', 'United', 'Lufthansa'], featured: false },
-    { from: 'Orlando (MCO)', to: 'Milan (MXP)', baseMin: 400, baseMax: 540, baseline: 720, airlines: ['Air France', 'Lufthansa', 'KLM'], featured: false },
-    { from: 'Charlotte (CLT)', to: 'Milan (MXP)', baseMin: 420, baseMax: 560, baseline: 740, airlines: ['Lufthansa', 'Swiss', 'United'], featured: false },
-    { from: 'Orlando (MCO)', to: 'Venice (VCE)', baseMin: 430, baseMax: 570, baseline: 750, airlines: ['Lufthansa', 'KLM', 'Air France'], featured: false },
-    { from: 'Melbourne (MLB)', to: 'Milan (MXP)', baseMin: 470, baseMax: 610, baseline: 820, airlines: ['United', 'Delta', 'Air France'], featured: false },
-    { from: 'Charlotte (CLT)', to: 'Venice (VCE)', baseMin: 440, baseMax: 580, baseline: 770, airlines: ['Delta', 'KLM', 'Lufthansa'], featured: false },
-    { from: 'Orlando (MCO)', to: 'Florence (FLR)', baseMin: 455, baseMax: 590, baseline: 790, airlines: ['TAP Air Portugal', 'Iberia', 'Lufthansa'], featured: false },
+    { from: 'New York (JFK)', to: 'Lisbon (LIS)', baseMin: 340, baseMax: 480, baseline: 640, airlines: ['TAP Air Portugal', 'Delta', 'United'], featured: true },
+    { from: 'Los Angeles (LAX)', to: 'Tokyo (HND)', baseMin: 560, baseMax: 760, baseline: 980, airlines: ['ANA', 'Japan Airlines', 'United'], featured: true },
+    { from: 'Boston (BOS)', to: 'Reykjavík (KEF)', baseMin: 260, baseMax: 380, baseline: 520, airlines: ['Icelandair', 'PLAY'], featured: false },
+    { from: 'San Francisco (SFO)', to: 'Mexico City (MEX)', baseMin: 210, baseMax: 320, baseline: 410, airlines: ['Aeroméxico', 'United', 'Alaska'], featured: false },
+    { from: 'Chicago (ORD)', to: 'Rome (FCO)', baseMin: 410, baseMax: 560, baseline: 760, airlines: ['ITA Airways', 'United', 'Lufthansa'], featured: false },
+    { from: 'Atlanta (ATL)', to: 'Paris (CDG)', baseMin: 430, baseMax: 590, baseline: 810, airlines: ['Delta', 'Air France'], featured: false },
+    { from: 'Denver (DEN)', to: 'London (LHR)', baseMin: 420, baseMax: 580, baseline: 790, airlines: ['United', 'British Airways'], featured: false },
+    { from: 'Seattle (SEA)', to: 'Barcelona (BCN)', baseMin: 460, baseMax: 620, baseline: 850, airlines: ['Lufthansa', 'Delta', 'KLM'], featured: false },
+    { from: 'Miami (MIA)', to: 'Bogotá (BOG)', baseMin: 190, baseMax: 290, baseline: 380, airlines: ['Avianca', 'American Airlines'], featured: false },
   ]
 
   // Use the date as a seed for deterministic but varying prices

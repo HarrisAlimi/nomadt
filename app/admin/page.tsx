@@ -534,19 +534,19 @@ export default function AdminPage() {
   }, [airbnbForm.original_price, airbnbForm.price])
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-paper">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="sticky top-0 z-30 border-b border-ink/5 bg-paper/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/" className="text-2xl font-bold text-gray-900">
-                🛠️ <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Nomad Admin</span>
+              <Link href="/" className="flex items-center">
+                <span className="font-display text-2xl font-semibold tracking-tight">nomad<span className="text-accent">.</span></span> <span className="ml-2 rounded-full bg-sand px-2.5 py-0.5 align-middle text-xs font-semibold text-ink-soft">Admin</span>
               </Link>
             </div>
             <Link
               href="/"
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="btn-secondary"
             >
               ← Back to Site
             </Link>
@@ -556,22 +556,18 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tabs */}
-        <div className="flex gap-2 mb-6">
+        <div className="mb-8 flex flex-wrap gap-2">
           {(['flights', 'hotels', 'airbnb', 'subscribers'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => { setActiveTab(tab); setShowForm(false); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 activeTab === tab
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
+                  ? 'bg-ink text-white'
+                  : 'bg-white text-ink-soft ring-1 ring-ink/10 hover:text-ink'
               }`}
             >
-              {tab === 'flights' && '✈️ '}
-              {tab === 'hotels' && '🏨 '}
-              {tab === 'airbnb' && '🏠 '}
-              {tab === 'subscribers' && '📧 '}
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                                                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
               <span className="ml-2 text-sm opacity-75">
                 ({tab === 'flights' ? flightDeals.length :
                   tab === 'hotels' ? hotelDeals.length :
@@ -584,8 +580,8 @@ export default function AdminPage() {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+            <p className="mt-4 text-ink-soft">Loading...</p>
           </div>
         ) : (
           <>
@@ -593,17 +589,17 @@ export default function AdminPage() {
             {activeTab === 'flights' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Flight Deals</h2>
+                  <h2 className="font-display text-3xl font-medium tracking-tight text-ink">Flight Deals</h2>
                   <div className="flex gap-2">
                     <button
                       onClick={() => { setShowPullForm(!showPullForm); setShowForm(false); setPullResult(null); }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                      className="btn-accent"
                     >
                       Pull Latest Deals
                     </button>
                     <button
                       onClick={() => { setShowForm(true); setEditingId(null); setActiveFormType('flight'); resetFlightForm(); setShowPullForm(false); }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                      className="btn-primary"
                     >
                       + Add Flight Deal
                     </button>
@@ -612,9 +608,9 @@ export default function AdminPage() {
 
                 {/* Pull Result Banner */}
                 {pullResult && (
-                  <div className={`mb-4 p-4 rounded-lg ${
+                  <div className={`mb-4 p-4 rounded-xl ${
                     pullResult.type === 'success'
-                      ? 'bg-green-50 border border-green-200 text-green-800'
+                      ? 'bg-pine-soft border border-pine/20 text-pine'
                       : 'bg-red-50 border border-red-200 text-red-800'
                   }`}>
                     <div className="flex justify-between items-center">
@@ -628,46 +624,46 @@ export default function AdminPage() {
 
                 {/* Pull Latest Deals Form */}
                 {showPullForm && (
-                  <div className="bg-white rounded-xl shadow-md p-6 mb-6 border-2 border-green-200">
+                  <div className="panel p-6 mb-6 ring-accent/20">
                     <h3 className="text-lg font-semibold mb-2">Pull Latest Flight Deals</h3>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-ink-soft mb-4">
                       Fetch current deals from the Amadeus API for the selected travel dates.
                       If Amadeus is not configured, market-rate deals will be generated.
                     </p>
                     <form onSubmit={handlePullDeals} className="flex flex-col sm:flex-row gap-4 items-end">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Departure Date</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Departure Date</label>
                         <input
                           type="date"
                           value={pullDepartureDate}
                           onChange={(e) => setPullDepartureDate(e.target.value)}
                           required
                           min={new Date().toISOString().split('T')[0]}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="field w-auto"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Return Date</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Return Date</label>
                         <input
                           type="date"
                           value={pullReturnDate}
                           onChange={(e) => setPullReturnDate(e.target.value)}
                           required
                           min={pullDepartureDate || new Date().toISOString().split('T')[0]}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="field w-auto"
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={pulling}
-                        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
+                        className="btn-accent"
                       >
                         {pulling ? 'Pulling Deals...' : 'Fetch Deals'}
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowPullForm(false)}
-                        className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                        className="btn-secondary"
                       >
                         Cancel
                       </button>
@@ -677,86 +673,86 @@ export default function AdminPage() {
 
                 {/* Add/Edit Form */}
                 {showForm && activeFormType === 'flight' && (
-                  <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+                  <div className="panel p-6 mb-6">
                     <h3 className="text-lg font-semibold mb-4">
                       {editingId ? 'Edit Flight Deal' : 'Add New Flight Deal'}
                     </h3>
                     <form onSubmit={handleFlightSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">From</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">From</label>
                         <input
                           type="text"
                           value={flightForm.from_location}
                           onChange={(e) => setFlightForm({ ...flightForm, from_location: e.target.value })}
-                          placeholder="Orlando (MCO)"
+                          placeholder="New York (JFK)"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">To</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">To</label>
                         <input
                           type="text"
                           value={flightForm.to_location}
                           onChange={(e) => setFlightForm({ ...flightForm, to_location: e.target.value })}
-                          placeholder="Rome (FCO)"
+                          placeholder="Lisbon (LIS)"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Price ($)</label>
                         <input
                           type="number"
                           value={flightForm.price}
                           onChange={(e) => setFlightForm({ ...flightForm, price: e.target.value })}
-                          placeholder="431"
+                          placeholder="389"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Original Price ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Original Price ($)</label>
                         <input
                           type="number"
                           value={flightForm.original_price}
                           onChange={(e) => setFlightForm({ ...flightForm, original_price: e.target.value })}
-                          placeholder="680"
+                          placeholder="640"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Airline</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Airline</label>
                         <input
                           type="text"
                           value={flightForm.airline}
                           onChange={(e) => setFlightForm({ ...flightForm, airline: e.target.value })}
-                          placeholder="Delta"
+                          placeholder="TAP Air Portugal"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Travel Dates</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Travel Dates</label>
                         <input
                           type="text"
                           value={flightForm.dates}
                           onChange={(e) => setFlightForm({ ...flightForm, dates: e.target.value })}
-                          placeholder="Apr 17-25"
+                          placeholder="May 6-14"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Savings ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Savings ($)</label>
                         <input
                           type="number"
                           value={flightForm.savings}
                           onChange={(e) => setFlightForm({ ...flightForm, savings: e.target.value })}
-                          placeholder="249"
+                          placeholder="251"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="field"
                         />
                       </div>
                       <div className="flex items-center">
@@ -765,22 +761,22 @@ export default function AdminPage() {
                             type="checkbox"
                             checked={flightForm.featured}
                             onChange={(e) => setFlightForm({ ...flightForm, featured: e.target.checked })}
-                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                            className="h-4 w-4 rounded accent-accent"
                           />
-                          <span className="ml-2 text-sm font-medium text-gray-700">Featured Deal</span>
+                          <span className="ml-2 text-sm font-medium text-ink">Featured Deal</span>
                         </label>
                       </div>
                       <div className="md:col-span-2 flex gap-3">
                         <button
                           type="submit"
-                          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                          className="btn-primary"
                         >
                           {editingId ? 'Update Deal' : 'Add Deal'}
                         </button>
                         <button
                           type="button"
                           onClick={() => { setShowForm(false); setEditingId(null); resetFlightForm(); }}
-                          className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                          className="btn-secondary"
                         >
                           Cancel
                         </button>
@@ -790,7 +786,7 @@ export default function AdminPage() {
                 )}
 
                 {/* Search & Filter Bar */}
-                <div className="bg-white rounded-xl shadow-md p-4 mb-4">
+                <div className="panel p-4 mb-4">
                   <div className="flex flex-col sm:flex-row gap-3 items-center">
                     <div className="relative flex-1 w-full">
                       <input
@@ -798,23 +794,23 @@ export default function AdminPage() {
                         value={flightSearch}
                         onChange={(e) => setFlightSearch(e.target.value)}
                         placeholder="Search by route, airline, dates..."
-                        className="w-full px-4 py-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="field pl-10"
                       />
-                      <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="absolute left-3 top-2.5 h-5 w-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </div>
                     <select
                       value={flightStatusFilter}
                       onChange={(e) => setFlightStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                      className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                      className="field w-auto"
                     >
                       <option value="all">All Status</option>
                       <option value="active">Active Only</option>
                       <option value="inactive">Inactive Only</option>
                     </select>
                     {(flightSearch || flightStatusFilter !== 'all') && (
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-ink-muted">
                         {filteredFlightDeals.length} of {flightDeals.length} deals
                       </span>
                     )}
@@ -822,40 +818,40 @@ export default function AdminPage() {
                 </div>
 
                 {/* Deals Table */}
-                <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="panel overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-sand/50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Route</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Airline</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Price</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Dates</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Route</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Airline</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Price</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Dates</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-ink/5">
                       {filteredFlightDeals.map((deal) => (
                         <tr key={deal.id} className={!deal.active ? 'opacity-50' : ''}>
                           <td className="px-4 py-3">
                             <div className="font-medium">{deal.from_location} → {deal.to_location}</div>
                             {deal.featured && (
-                              <span className="text-xs text-purple-600 font-medium">⭐ Featured</span>
+                              <span className="text-xs font-medium text-accent">⭐ Featured</span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">{deal.airline}</td>
+                          <td className="px-4 py-3 text-sm text-ink-soft">{deal.airline}</td>
                           <td className="px-4 py-3">
-                            <div className="font-semibold text-green-600">${deal.price}</div>
-                            <div className="text-xs text-gray-500 line-through">${deal.original_price}</div>
+                            <div className="font-semibold text-pine">${deal.price}</div>
+                            <div className="text-xs text-ink-muted line-through">${deal.original_price}</div>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">{deal.dates}</td>
+                          <td className="px-4 py-3 text-sm text-ink-soft">{deal.dates}</td>
                           <td className="px-4 py-3">
                             <button
                               onClick={() => toggleFlightActive(deal)}
-                              className={`px-2 py-1 rounded text-xs font-medium ${
+                              className={`rounded-full px-2.5 py-1 text-xs font-medium ${
                                 deal.active
-                                  ? 'bg-green-100 text-green-700'
-                                  : 'bg-gray-100 text-gray-600'
+                                  ? 'bg-pine-soft text-pine'
+                                  : 'bg-sand text-ink-soft'
                               }`}
                             >
                               {deal.active ? 'Active' : 'Inactive'}
@@ -865,13 +861,13 @@ export default function AdminPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => editFlight(deal)}
-                                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                className="text-ink hover:text-accent text-sm font-medium"
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => deleteFlight(deal.id)}
-                                className="text-red-600 hover:text-red-800 text-sm font-medium"
+                                className="text-ink-muted hover:text-red-600 text-sm font-medium"
                               >
                                 Delete
                               </button>
@@ -882,7 +878,7 @@ export default function AdminPage() {
                     </tbody>
                   </table>
                   {filteredFlightDeals.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-ink-muted">
                       {flightDeals.length === 0 ? 'No flight deals yet. Add your first deal!' : 'No deals match your search.'}
                     </div>
                   )}
@@ -894,17 +890,17 @@ export default function AdminPage() {
             {activeTab === 'hotels' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Hotel Deals</h2>
+                  <h2 className="font-display text-3xl font-medium tracking-tight text-ink">Hotel Deals</h2>
                   <div className="flex gap-2">
                     <button
                       onClick={() => { setShowHotelPullForm(!showHotelPullForm); setShowForm(false); setPullResult(null); }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                      className="btn-accent"
                     >
                       Pull Latest Deals
                     </button>
                     <button
                       onClick={() => { setShowForm(true); setEditingId(null); setActiveFormType('hotel'); resetHotelForm(); setShowHotelPullForm(false); }}
-                      className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                      className="btn-primary"
                     >
                       + Add Hotel Deal
                     </button>
@@ -913,9 +909,9 @@ export default function AdminPage() {
 
                 {/* Pull Result Banner */}
                 {pullResult && activeTab === 'hotels' && (
-                  <div className={`mb-4 p-4 rounded-lg ${
+                  <div className={`mb-4 p-4 rounded-xl ${
                     pullResult.type === 'success'
-                      ? 'bg-green-50 border border-green-200 text-green-800'
+                      ? 'bg-pine-soft border border-pine/20 text-pine'
                       : 'bg-red-50 border border-red-200 text-red-800'
                   }`}>
                     <div className="flex justify-between items-center">
@@ -929,19 +925,19 @@ export default function AdminPage() {
 
                 {/* Pull Latest Hotel Deals Form */}
                 {showHotelPullForm && (
-                  <div className="bg-white rounded-xl shadow-md p-6 mb-6 border-2 border-green-200">
+                  <div className="panel p-6 mb-6 ring-accent/20">
                     <h3 className="text-lg font-semibold mb-2">Pull Latest Hotel Deals</h3>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-ink-soft mb-4">
                       Generate hotel deals for a specific Italian city and travel dates.
                       Deals are based on current market rates.
                     </p>
                     <form onSubmit={handlePullHotelDeals} className="flex flex-col sm:flex-row gap-4 items-end flex-wrap">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Location</label>
                         <select
                           value={hotelPullLocation}
                           onChange={(e) => setHotelPullLocation(e.target.value)}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                          className="field w-auto"
                         >
                           <option value="Rome, Italy">Rome, Italy</option>
                           <option value="Milan, Italy">Milan, Italy</option>
@@ -951,38 +947,38 @@ export default function AdminPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Check-in</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Check-in</label>
                         <input
                           type="date"
                           value={hotelPullCheckIn}
                           onChange={(e) => setHotelPullCheckIn(e.target.value)}
                           required
                           min={new Date().toISOString().split('T')[0]}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="field w-auto"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Check-out</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Check-out</label>
                         <input
                           type="date"
                           value={hotelPullCheckOut}
                           onChange={(e) => setHotelPullCheckOut(e.target.value)}
                           required
                           min={hotelPullCheckIn || new Date().toISOString().split('T')[0]}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="field w-auto"
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={pulling}
-                        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
+                        className="btn-accent"
                       >
                         {pulling ? 'Pulling Deals...' : 'Fetch Deals'}
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowHotelPullForm(false)}
-                        className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                        className="btn-secondary"
                       >
                         Cancel
                       </button>
@@ -992,57 +988,57 @@ export default function AdminPage() {
 
                 {/* Add/Edit Form */}
                 {showForm && activeFormType === 'hotel' && (
-                  <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+                  <div className="panel p-6 mb-6">
                     <h3 className="text-lg font-semibold mb-4">
                       {editingId ? 'Edit Hotel Deal' : 'Add New Hotel Deal'}
                     </h3>
                     <form onSubmit={handleHotelSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Hotel Name</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Hotel Name</label>
                         <input
                           type="text"
                           value={hotelForm.hotel}
                           onChange={(e) => setHotelForm({ ...hotelForm, hotel: e.target.value })}
-                          placeholder="Hotel Colosseum Rome"
+                          placeholder="The Alcove"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Location</label>
                         <input
                           type="text"
                           value={hotelForm.location}
                           onChange={(e) => setHotelForm({ ...hotelForm, location: e.target.value })}
-                          placeholder="Rome, Italy"
+                          placeholder="Lisbon, Portugal"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Price per Night ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Price per Night ($)</label>
                         <input
                           type="number"
                           value={hotelForm.price}
                           onChange={(e) => setHotelForm({ ...hotelForm, price: e.target.value })}
                           placeholder="129"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Original Price ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Original Price ($)</label>
                         <input
                           type="number"
                           value={hotelForm.original_price}
                           onChange={(e) => setHotelForm({ ...hotelForm, original_price: e.target.value })}
                           placeholder="210"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Rating (1-5)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Rating (1-5)</label>
                         <input
                           type="number"
                           step="0.1"
@@ -1052,29 +1048,29 @@ export default function AdminPage() {
                           onChange={(e) => setHotelForm({ ...hotelForm, rating: e.target.value })}
                           placeholder="4.5"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Travel Dates</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Travel Dates</label>
                         <input
                           type="text"
                           value={hotelForm.dates}
                           onChange={(e) => setHotelForm({ ...hotelForm, dates: e.target.value })}
-                          placeholder="Apr 17-25"
+                          placeholder="May 6-14"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Savings ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Savings ($)</label>
                         <input
                           type="number"
                           value={hotelForm.savings}
                           onChange={(e) => setHotelForm({ ...hotelForm, savings: e.target.value })}
                           placeholder="81"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div className="flex items-center">
@@ -1083,32 +1079,32 @@ export default function AdminPage() {
                             type="checkbox"
                             checked={hotelForm.featured}
                             onChange={(e) => setHotelForm({ ...hotelForm, featured: e.target.checked })}
-                            className="w-4 h-4 text-amber-600 rounded focus:ring-amber-500"
+                            className="h-4 w-4 rounded accent-accent"
                           />
-                          <span className="ml-2 text-sm font-medium text-gray-700">Featured Deal</span>
+                          <span className="ml-2 text-sm font-medium text-ink">Featured Deal</span>
                         </label>
                       </div>
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Booking URL (optional)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Booking URL (optional)</label>
                         <input
                           type="url"
                           value={hotelForm.booking_url}
                           onChange={(e) => setHotelForm({ ...hotelForm, booking_url: e.target.value })}
                           placeholder="https://booking.com/hotel/..."
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="field"
                         />
                       </div>
                       <div className="md:col-span-2 flex gap-3">
                         <button
                           type="submit"
-                          className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                          className="btn-primary"
                         >
                           {editingId ? 'Update Deal' : 'Add Deal'}
                         </button>
                         <button
                           type="button"
                           onClick={() => { setShowForm(false); setEditingId(null); resetHotelForm(); }}
-                          className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                          className="btn-secondary"
                         >
                           Cancel
                         </button>
@@ -1118,7 +1114,7 @@ export default function AdminPage() {
                 )}
 
                 {/* Search & Filter Bar */}
-                <div className="bg-white rounded-xl shadow-md p-4 mb-4">
+                <div className="panel p-4 mb-4">
                   <div className="flex flex-col sm:flex-row gap-3 items-center">
                     <div className="relative flex-1 w-full">
                       <input
@@ -1126,23 +1122,23 @@ export default function AdminPage() {
                         value={hotelSearch}
                         onChange={(e) => setHotelSearch(e.target.value)}
                         placeholder="Search by hotel name, location, dates..."
-                        className="w-full px-4 py-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        className="field pl-10"
                       />
-                      <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="absolute left-3 top-2.5 h-5 w-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </div>
                     <select
                       value={hotelStatusFilter}
                       onChange={(e) => setHotelStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                      className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+                      className="field w-auto"
                     >
                       <option value="all">All Status</option>
                       <option value="active">Active Only</option>
                       <option value="inactive">Inactive Only</option>
                     </select>
                     {(hotelSearch || hotelStatusFilter !== 'all') && (
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-ink-muted">
                         {filteredHotelDeals.length} of {hotelDeals.length} deals
                       </span>
                     )}
@@ -1150,43 +1146,43 @@ export default function AdminPage() {
                 </div>
 
                 {/* Hotels Table */}
-                <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="panel overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-sand/50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Hotel</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Location</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Price</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Rating</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Hotel</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Location</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Price</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Rating</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-ink/5">
                       {filteredHotelDeals.map((deal) => (
                         <tr key={deal.id} className={!deal.active ? 'opacity-50' : ''}>
                           <td className="px-4 py-3">
                             <div className="font-medium">{deal.hotel}</div>
                             {deal.featured && (
-                              <span className="text-xs text-purple-600 font-medium">⭐ Featured</span>
+                              <span className="text-xs font-medium text-accent">⭐ Featured</span>
                             )}
                             {deal.booking_url && (
-                              <span className="text-xs text-blue-600 font-medium ml-2">🔗 Has Link</span>
+                              <span className="text-xs font-medium text-accent ml-2">🔗 Has Link</span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">{deal.location}</td>
+                          <td className="px-4 py-3 text-sm text-ink-soft">{deal.location}</td>
                           <td className="px-4 py-3">
-                            <div className="font-semibold text-green-600">${deal.price}/night</div>
-                            <div className="text-xs text-gray-500 line-through">${deal.original_price}</div>
+                            <div className="font-semibold text-pine">${deal.price}/night</div>
+                            <div className="text-xs text-ink-muted line-through">${deal.original_price}</div>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">⭐ {deal.rating}</td>
+                          <td className="px-4 py-3 text-sm text-ink-soft">⭐ {deal.rating}</td>
                           <td className="px-4 py-3">
                             <button
                               onClick={() => toggleHotelActive(deal)}
-                              className={`px-2 py-1 rounded text-xs font-medium ${
+                              className={`rounded-full px-2.5 py-1 text-xs font-medium ${
                                 deal.active
-                                  ? 'bg-green-100 text-green-700'
-                                  : 'bg-gray-100 text-gray-600'
+                                  ? 'bg-pine-soft text-pine'
+                                  : 'bg-sand text-ink-soft'
                               }`}
                             >
                               {deal.active ? 'Active' : 'Inactive'}
@@ -1196,13 +1192,13 @@ export default function AdminPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => editHotel(deal)}
-                                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                className="text-ink hover:text-accent text-sm font-medium"
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => deleteHotel(deal.id)}
-                                className="text-red-600 hover:text-red-800 text-sm font-medium"
+                                className="text-ink-muted hover:text-red-600 text-sm font-medium"
                               >
                                 Delete
                               </button>
@@ -1213,7 +1209,7 @@ export default function AdminPage() {
                     </tbody>
                   </table>
                   {filteredHotelDeals.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-ink-muted">
                       {hotelDeals.length === 0 ? 'No hotel deals yet. Add your first deal!' : 'No deals match your search.'}
                     </div>
                   )}
@@ -1225,17 +1221,17 @@ export default function AdminPage() {
             {activeTab === 'airbnb' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Airbnb Deals</h2>
+                  <h2 className="font-display text-3xl font-medium tracking-tight text-ink">Airbnb Deals</h2>
                   <div className="flex gap-2">
                     <button
                       onClick={() => { setShowAirbnbPullForm(!showAirbnbPullForm); setShowForm(false); setPullResult(null); }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                      className="btn-accent"
                     >
                       Pull Latest Deals
                     </button>
                     <button
                       onClick={() => { setShowForm(true); setEditingId(null); setActiveFormType('airbnb'); resetAirbnbForm(); setShowAirbnbPullForm(false); }}
-                      className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-medium"
+                      className="btn-primary"
                     >
                       + Add Airbnb Deal
                     </button>
@@ -1244,9 +1240,9 @@ export default function AdminPage() {
 
                 {/* Pull Result Banner */}
                 {pullResult && activeTab === 'airbnb' && (
-                  <div className={`mb-4 p-4 rounded-lg ${
+                  <div className={`mb-4 p-4 rounded-xl ${
                     pullResult.type === 'success'
-                      ? 'bg-green-50 border border-green-200 text-green-800'
+                      ? 'bg-pine-soft border border-pine/20 text-pine'
                       : 'bg-red-50 border border-red-200 text-red-800'
                   }`}>
                     <div className="flex justify-between items-center">
@@ -1260,19 +1256,19 @@ export default function AdminPage() {
 
                 {/* Pull Latest Airbnb Deals Form */}
                 {showAirbnbPullForm && (
-                  <div className="bg-white rounded-xl shadow-md p-6 mb-6 border-2 border-green-200">
+                  <div className="panel p-6 mb-6 ring-accent/20">
                     <h3 className="text-lg font-semibold mb-2">Pull Latest Airbnb Deals</h3>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-ink-soft mb-4">
                       Generate Airbnb listings for a specific Italian location and travel dates.
                       Deals are based on current market rates.
                     </p>
                     <form onSubmit={handlePullAirbnbDeals} className="flex flex-col sm:flex-row gap-4 items-end flex-wrap">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Location</label>
                         <select
                           value={airbnbPullLocation}
                           onChange={(e) => setAirbnbPullLocation(e.target.value)}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                          className="field w-auto"
                         >
                           <option value="Rome, Italy">Rome, Italy</option>
                           <option value="Milan, Italy">Milan, Italy</option>
@@ -1283,38 +1279,38 @@ export default function AdminPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Check-in</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Check-in</label>
                         <input
                           type="date"
                           value={airbnbPullCheckIn}
                           onChange={(e) => setAirbnbPullCheckIn(e.target.value)}
                           required
                           min={new Date().toISOString().split('T')[0]}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="field w-auto"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Check-out</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Check-out</label>
                         <input
                           type="date"
                           value={airbnbPullCheckOut}
                           onChange={(e) => setAirbnbPullCheckOut(e.target.value)}
                           required
                           min={airbnbPullCheckIn || new Date().toISOString().split('T')[0]}
-                          className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="field w-auto"
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={pulling}
-                        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
+                        className="btn-accent"
                       >
                         {pulling ? 'Pulling Deals...' : 'Fetch Deals'}
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowAirbnbPullForm(false)}
-                        className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                        className="btn-secondary"
                       >
                         Cancel
                       </button>
@@ -1324,79 +1320,79 @@ export default function AdminPage() {
 
                 {/* Add/Edit Form */}
                 {showForm && activeFormType === 'airbnb' && (
-                  <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+                  <div className="panel p-6 mb-6">
                     <h3 className="text-lg font-semibold mb-4">
                       {editingId ? 'Edit Airbnb Deal' : 'Add New Airbnb Deal'}
                     </h3>
                     <form onSubmit={handleAirbnbSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Property Name</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Property Name</label>
                         <input
                           type="text"
                           value={airbnbForm.name}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, name: e.target.value })}
-                          placeholder="Charming Apartment Near Colosseum"
+                          placeholder="Sunlit Loft in Alfama"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Location</label>
                         <input
                           type="text"
                           value={airbnbForm.location}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, location: e.target.value })}
-                          placeholder="Rome, Italy"
+                          placeholder="Lisbon, Portugal"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Property Type</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Property Type</label>
                         <input
                           type="text"
                           value={airbnbForm.property_type}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, property_type: e.target.value })}
                           placeholder="Entire apartment"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Max Guests</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Max Guests</label>
                         <input
                           type="number"
                           value={airbnbForm.guests}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, guests: e.target.value })}
                           placeholder="4"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Price per Night ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Price per Night ($)</label>
                         <input
                           type="number"
                           value={airbnbForm.price}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, price: e.target.value })}
                           placeholder="95"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Original Price ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Original Price ($)</label>
                         <input
                           type="number"
                           value={airbnbForm.original_price}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, original_price: e.target.value })}
                           placeholder="160"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Rating (1-5)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Rating (1-5)</label>
                         <input
                           type="number"
                           step="0.01"
@@ -1406,40 +1402,40 @@ export default function AdminPage() {
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, rating: e.target.value })}
                           placeholder="4.9"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Number of Reviews</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Number of Reviews</label>
                         <input
                           type="number"
                           value={airbnbForm.reviews}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, reviews: e.target.value })}
                           placeholder="234"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Travel Dates</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Travel Dates</label>
                         <input
                           type="text"
                           value={airbnbForm.dates}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, dates: e.target.value })}
-                          placeholder="Apr 17-25"
+                          placeholder="May 6-14"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Savings ($)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Savings ($)</label>
                         <input
                           type="number"
                           value={airbnbForm.savings}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, savings: e.target.value })}
                           placeholder="65"
                           required
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div className="flex items-center">
@@ -1448,32 +1444,32 @@ export default function AdminPage() {
                             type="checkbox"
                             checked={airbnbForm.featured}
                             onChange={(e) => setAirbnbForm({ ...airbnbForm, featured: e.target.checked })}
-                            className="w-4 h-4 text-rose-600 rounded focus:ring-rose-500"
+                            className="h-4 w-4 rounded accent-accent"
                           />
-                          <span className="ml-2 text-sm font-medium text-gray-700">Featured Deal</span>
+                          <span className="ml-2 text-sm font-medium text-ink">Featured Deal</span>
                         </label>
                       </div>
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Booking URL (optional)</label>
+                        <label className="block text-sm font-medium text-ink mb-1.5">Booking URL (optional)</label>
                         <input
                           type="url"
                           value={airbnbForm.booking_url}
                           onChange={(e) => setAirbnbForm({ ...airbnbForm, booking_url: e.target.value })}
                           placeholder="https://airbnb.com/rooms/..."
-                          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="field"
                         />
                       </div>
                       <div className="md:col-span-2 flex gap-3">
                         <button
                           type="submit"
-                          className="px-6 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-medium"
+                          className="btn-primary"
                         >
                           {editingId ? 'Update Deal' : 'Add Deal'}
                         </button>
                         <button
                           type="button"
                           onClick={() => { setShowForm(false); setEditingId(null); resetAirbnbForm(); }}
-                          className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                          className="btn-secondary"
                         >
                           Cancel
                         </button>
@@ -1483,7 +1479,7 @@ export default function AdminPage() {
                 )}
 
                 {/* Search & Filter Bar */}
-                <div className="bg-white rounded-xl shadow-md p-4 mb-4">
+                <div className="panel p-4 mb-4">
                   <div className="flex flex-col sm:flex-row gap-3 items-center">
                     <div className="relative flex-1 w-full">
                       <input
@@ -1491,23 +1487,23 @@ export default function AdminPage() {
                         value={airbnbSearch}
                         onChange={(e) => setAirbnbSearch(e.target.value)}
                         placeholder="Search by property name, location, type..."
-                        className="w-full px-4 py-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                        className="field pl-10"
                       />
-                      <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="absolute left-3 top-2.5 h-5 w-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </div>
                     <select
                       value={airbnbStatusFilter}
                       onChange={(e) => setAirbnbStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                      className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white"
+                      className="field w-auto"
                     >
                       <option value="all">All Status</option>
                       <option value="active">Active Only</option>
                       <option value="inactive">Inactive Only</option>
                     </select>
                     {(airbnbSearch || airbnbStatusFilter !== 'all') && (
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-ink-muted">
                         {filteredAirbnbDeals.length} of {airbnbDeals.length} deals
                       </span>
                     )}
@@ -1515,46 +1511,46 @@ export default function AdminPage() {
                 </div>
 
                 {/* Airbnb Table */}
-                <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="panel overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-sand/50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Property</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Location</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Price</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Rating</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Property</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Location</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Price</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Rating</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-ink/5">
                       {filteredAirbnbDeals.map((deal) => (
                         <tr key={deal.id} className={!deal.active ? 'opacity-50' : ''}>
                           <td className="px-4 py-3">
                             <div className="font-medium">{deal.name}</div>
-                            <div className="text-xs text-gray-500">{deal.property_type} • {deal.guests} guests</div>
+                            <div className="text-xs text-ink-muted">{deal.property_type} • {deal.guests} guests</div>
                             {deal.featured && (
-                              <span className="text-xs text-purple-600 font-medium">⭐ Featured</span>
+                              <span className="text-xs font-medium text-accent">⭐ Featured</span>
                             )}
                             {deal.booking_url && (
-                              <span className="text-xs text-blue-600 font-medium ml-2">🔗 Has Link</span>
+                              <span className="text-xs font-medium text-accent ml-2">🔗 Has Link</span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">{deal.location}</td>
+                          <td className="px-4 py-3 text-sm text-ink-soft">{deal.location}</td>
                           <td className="px-4 py-3">
-                            <div className="font-semibold text-green-600">${deal.price}/night</div>
-                            <div className="text-xs text-gray-500 line-through">${deal.original_price}</div>
+                            <div className="font-semibold text-pine">${deal.price}/night</div>
+                            <div className="text-xs text-ink-muted line-through">${deal.original_price}</div>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">
+                          <td className="px-4 py-3 text-sm text-ink-soft">
                             ⭐ {deal.rating} ({deal.reviews})
                           </td>
                           <td className="px-4 py-3">
                             <button
                               onClick={() => toggleAirbnbActive(deal)}
-                              className={`px-2 py-1 rounded text-xs font-medium ${
+                              className={`rounded-full px-2.5 py-1 text-xs font-medium ${
                                 deal.active
-                                  ? 'bg-green-100 text-green-700'
-                                  : 'bg-gray-100 text-gray-600'
+                                  ? 'bg-pine-soft text-pine'
+                                  : 'bg-sand text-ink-soft'
                               }`}
                             >
                               {deal.active ? 'Active' : 'Inactive'}
@@ -1564,13 +1560,13 @@ export default function AdminPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => editAirbnb(deal)}
-                                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                className="text-ink hover:text-accent text-sm font-medium"
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => deleteAirbnb(deal.id)}
-                                className="text-red-600 hover:text-red-800 text-sm font-medium"
+                                className="text-ink-muted hover:text-red-600 text-sm font-medium"
                               >
                                 Delete
                               </button>
@@ -1581,7 +1577,7 @@ export default function AdminPage() {
                     </tbody>
                   </table>
                   {filteredAirbnbDeals.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-ink-muted">
                       {airbnbDeals.length === 0 ? 'No Airbnb deals yet. Add your first deal!' : 'No deals match your search.'}
                     </div>
                   )}
@@ -1593,36 +1589,36 @@ export default function AdminPage() {
             {activeTab === 'subscribers' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Email Subscribers</h2>
-                  <span className="text-gray-600">{subscribers.length} total subscribers</span>
+                  <h2 className="font-display text-3xl font-medium tracking-tight text-ink">Email Subscribers</h2>
+                  <span className="text-ink-soft">{subscribers.length} total subscribers</span>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="panel overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-sand/50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Email</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Interested In</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Subscribed</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Email</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Interested In</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Subscribed</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-soft">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-ink/5">
                       {subscribers.map((sub) => (
                         <tr key={sub.id}>
                           <td className="px-4 py-3 font-medium">{sub.email}</td>
                           <td className="px-4 py-3">
-                            <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                            <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-dark">
                               {sub.deal_type}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">
+                          <td className="px-4 py-3 text-sm text-ink-soft">
                             {new Date(sub.created_at).toLocaleDateString()}
                           </td>
                           <td className="px-4 py-3">
                             <button
                               onClick={() => deleteSubscriber(sub.id)}
-                              className="text-red-600 hover:text-red-800 text-sm font-medium"
+                              className="text-ink-muted hover:text-red-600 text-sm font-medium"
                             >
                               Delete
                             </button>
@@ -1632,7 +1628,7 @@ export default function AdminPage() {
                     </tbody>
                   </table>
                   {subscribers.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-ink-muted">
                       No subscribers yet.
                     </div>
                   )}
