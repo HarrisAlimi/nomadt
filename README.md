@@ -1,15 +1,14 @@
-# Nomad - Flight Deals
+# Nomad — Travel Deals
 
-A beautiful, modern flight deals website.
+A clean, editorial-style travel deals site for flights, hotels and vacation rentals.
 
 ## Features
 
-- 🎯 Curated flight deals from East Coast to Europe
-- ⭐ Featured section for Florida → Italy routes
-- 📧 Email signup for deal alerts (ready to integrate with Mailchimp)
-- 📱 Fully responsive design
-- 🚀 Built with Next.js 14 and Tailwind CSS
-- 💰 Shows savings and price comparisons
+- ✈️ Flight, 🏨 hotel and 🏠 vacation-rental deal pages with featured picks
+- 📧 Email signup for deal alerts (stored in Supabase)
+- 🛠️ `/admin` dashboard to add, edit, toggle and auto-generate deals
+- 🔌 Optional Amadeus API integration for live flight prices
+- 📱 Fully responsive, built with Next.js and Tailwind CSS
 
 ## Getting Started
 
@@ -66,27 +65,8 @@ Vercel will give you a free domain like `your-site.vercel.app` and handle all ho
 
 ## Updating Deals
 
-Currently, deals are hardcoded in `app/page.tsx` in the `deals` array. To add new deals:
-
-1. Open `app/page.tsx`
-2. Find the `deals` array (around line 7)
-3. Add new deal objects following this format:
-
-```typescript
-{
-  id: 7,
-  from: 'City (CODE)',
-  to: 'Destination (CODE)',
-  price: 399,
-  originalPrice: 650,
-  airline: 'Airline Name',
-  dates: 'Apr 15-29',
-  savings: 251,
-  featured: false, // set to true for Florida → Italy deals
-}
-```
-
-4. Save and push to GitHub - Vercel will auto-deploy!
+- **With Supabase:** run `supabase-setup.sql` in your Supabase SQL editor, then manage deals from `/admin`.
+- **Without Supabase:** the site shows the example deals in `app/lib/sampleDeals.ts`. Edit that file to change them.
 
 ## Next Steps to Add Real Automation
 
@@ -128,19 +108,9 @@ Instead of editing code, use a free CMS:
 
 ## Customization
 
-### Change Colors
-Edit `tailwind.config.js` to change the color scheme:
-```javascript
-colors: {
-  primary: '#2563eb', // Change this
-  secondary: '#7c3aed', // And this
-}
-```
-
-### Change Site Name
-Edit these files:
-- `app/layout.tsx` - Update metadata
-- `app/page.tsx` - Update header text
+- **Colors and fonts:** design tokens (`ink`, `paper`, `sand`, `accent`, `pine`) live in `tailwind.config.js`; fonts are set in `app/layout.tsx`.
+- **Shared UI:** header, footer, hero, signup form and deal cards are in `app/components/`.
+- **Site name and metadata:** `app/layout.tsx` and the `Wordmark` in `app/components/Header.tsx`.
 
 ## Tips for Growing
 
